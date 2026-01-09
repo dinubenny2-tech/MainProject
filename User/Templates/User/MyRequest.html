@@ -35,12 +35,14 @@
                 <td>
                     {% if i.request_status == 5 %}
                    <a href="{% url 'User:upload' i.id %}">For Replacement</a>
+                    {% elif i.request_status == 9 %}
+                    For Repair
                     {% elif i.request_status == 6 %}
-                    for repair
-                    {% elif i.request_status == 7 %}
-                    File Uploaded   
+                    File Uploaded
+                    {% elif i.request_status == 10 %}
+                    Worker Will Visit 
                     {% else %}
-                    pending
+                    Pending
                     {% endif %}
                 </td>
             </tr>
