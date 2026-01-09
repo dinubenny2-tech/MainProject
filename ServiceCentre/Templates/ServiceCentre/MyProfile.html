@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+</head>
+
+<body>
+    <form action="">
+        {% csrf_token %}
+        <table align="center" border>
+            <tr>
+                <td colspan="center" align="2"><img src="{{scdata.servicecentre_photo.url}}" alt="ServiceCentre" width="300" height="300"></td>
+                
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>{{scdata.servicecentre_name}}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{scdata.servicecentre_email}}</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>{{scdata.servicecentre_address}}</td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td>{{scdata.servicecentre_contact}}</td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <a href="{% url 'ServiceCentre:editprofile' %}">Edit Profile</a>
+                    <a href="{% url 'ServiceCentre:changepassword' %}">Change Password</a>
+                </td>
+                
+            </tr>
+        </table>
+    </form>
+</body>
+
+</html>

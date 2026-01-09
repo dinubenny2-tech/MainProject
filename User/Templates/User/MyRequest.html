@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Request</title>
+</head>
+
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <h2 align="center">My Requests</h2>
+        <table align="center" border>
+            <tr>
+                <td>SINO</td>
+                <td>Details</td>
+                <td>Todate</td>
+                <td>Service Centre Details</td>
+                <td>Worker Details</td>
+                <td>Action</td>
+            </tr>
+             <tr>
+                 {% for i in sc %}
+
+                <td>{{forloop.counter }}</td>
+                <td>{{i.request_details}}</td>
+                <td>{{i.request_todate}}</td>
+                <td>{{i.servicecentre.servicecentre_name}}  <br>
+                    {{i.servicecentre.servicecentre_email}} <br>
+                    {{i.servicecentre.servicecentre_contact}}</td>
+                <td>{{i.worker.worker_name}}  <br>
+                    {{i.worker.worker_email}} <br>
+                    {{i.worker_contact}}   </td>
+                <td>
+                    {% if i.request_status == 5 %}
+                   <a href="{% url 'User:upload' i.id %}">For Replacement</a>
+                    {% elif i.request_status == 6 %}
+                    for repair
+                    {% elif i.request_status == 7 %}
+                    File Uploaded   
+                    {% else %}
+                    pending
+                    {% endif %}
+                </td>
+            </tr>
+                {% endfor %}
+        </table>
+    </form>
+</body>
+
+</html>

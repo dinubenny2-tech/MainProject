@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+</head>
+<body>
+    <form action="">
+        {% csrf_token %}
+        <table align="center" border>
+            <tr>
+                <td colspan="2" align="center"><img src="{{wdata.worker_photo.url}}" alt="Worker" width="300" height="300"></td>
+                
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>{{wdata.worker_name}}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{wdata.worker_email}}</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>{{wdata.worker_address}}</td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td>{{wdata.worker_contact}}</td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <a href="{% url 'Worker:editprofile' %}">Edit Profile</a>
+                   <a href="{% url 'Worker:changepassword' %}">Change Password</a>
+                </td>
+                
+            </tr>
+        </table>
+    </form>
+
+    
+</body>
+</html>

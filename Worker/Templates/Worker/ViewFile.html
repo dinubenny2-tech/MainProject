@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View File</title>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table border="2" align="center" border>
+            <tr>
+                <td>file</td>
+                <td>bill</td>
+            </tr>
+            {% for i in work %}
+            <tr>
+                <td><img src="{{i.product_photo.url}}" alt="Product" width="300" height="300"></td>
+                <td><img src="{{i.product_bill.url}}" alt="Bill" width="300" height="300"></td>
+            </tr>
+            {% endfor %}
+        </table></form>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SC List</title>
+</head>
+
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <h2 align="center">Service Centre List</h2>
+        <table align="center"border>
+            
+            <tr>
+                <td>SINO</td>
+                <td>Name</td>
+                <td>Email</td>
+                <td>Contact</td>
+                <td>Address</td>
+                <td>Photo</td>
+                <td>District</td>
+                <td>Place</td>
+                <td>Action</td>
+            </tr>
+            <tr>
+                {% for i in worker %}
+
+                <td>{{forloop.counter }}</td>
+                <td>{{i.worker_name}}</td>
+                <td>{{i.worker_email}}</td>
+                <td>{{i.worker_contact}}</td>
+                <td>{{i.worker_address}}</td>
+                <td>{{i.worker_photo}}</td>
+                <td>{{i.place.district.district_name}}</td>
+                <td>{{i.place.place_name}}</td>
+                <td></td>
+            </tr>
+                {% endfor %}
+        </table>
+    </form>
+</body>
+
+</html>

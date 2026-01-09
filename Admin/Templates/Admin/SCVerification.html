@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Centre Verification</title>
+</head>
+
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <h3 align="center">New ServiceCentres</h3>
+        <table align="center" border>
+            <tr>
+                <td>SINO</td>
+                <td>Name</td>
+                <td>Email</td>
+                <td>Contact</td>
+                <td>Address</td>
+                <td>Logo</td>
+                <td>Proof</td>
+                <td>District</td>
+                <td>Place</td>
+                <td>Action</td>
+            </tr>
+            <tr>
+                {% for i in pending %}
+
+                <td>{{forloop.counter }}</td>
+                <td>{{i.servicecentre_name}}</td>
+                <td>{{i.servicecentre_email}}</td>
+                <td>{{i.servicecentre_contact}}</td>
+                <td>{{i.servicecentre_address}}</td>
+                <td>{{i.servicecentre_photo}}</td>
+                <td>{{i.servicecentre_proof}}</td>
+                <td>{{i.place.district.district_name}}</td>
+                <td>{{i.place.place_name}}</td>
+                <td>
+                    <a href="{% url 'Admin:scaccept' i.id %}">Accept</a>
+                    <a href="{% url 'Admin:screject' i.id %}">Reject</a></td>
+            </tr>
+                {% endfor %}
+        </table>
+        <h3 align="center">Accepted ServiceCentres</h3>
+        <table align="center" border>
+            <tr>
+                <td>SINO</td>
+                <td>Name</td>
+                <td>Email</td>
+                <td>Contact</td>
+                <td>Address</td>
+                <td>Logo</td>
+                <td>Proof</td>
+                <td>District</td>
+                <td>Place</td>
+                <td>Action</td>
+            </tr>
+            <tr>
+                {% for i in accepted %}
+
+                <td>{{forloop.counter }}</td>
+                <td>{{i.servicecentre_name}}</td>
+                <td>{{i.servicecentre_email}}</td>
+                <td>{{i.servicecentre_contact}}</td>
+                <td>{{i.servicecentre_address}}</td>
+                <td>{{i.servicecentre_photo}}</td>
+                <td>{{i.servicecentre_proof}}</td>
+                <td>{{i.place.district.district_name}}</td>
+                <td>{{i.place.place_name}}</td>
+                <td>
+                    <a href="{% url 'Admin:screject' i.id %}">Reject</a></td>
+            </tr>
+                {% endfor %}
+        </table>
+        <h3 align="center">Rejected ServiceCentres</h3>
+        <table align="center" border>
+            <tr>
+                <td>SINO</td>
+                <td>Name</td>
+                <td>Email</td>
+                <td>Contact</td>
+                <td>Address</td>
+                <td>Logo</td>
+                <td>Proof</td>
+                <td>District</td>
+                <td>Place</td>
+                <td>Action</td>
+            </tr>
+            <tr>
+                {% for i in rejected %}
+
+                <td>{{forloop.counter }}</td>
+                <td>{{i.servicecentre_name}}</td>
+                <td>{{i.servicecentre_email}}</td>
+                <td>{{i.servicecentre_contact}}</td>
+                <td>{{i.servicecentre_address}}</td>
+                <td>{{i.servicecentre_photo}}</td>
+                <td>{{i.servicecentre_proof}}</td>
+                <td>{{i.place.district.district_name}}</td>
+                <td>{{i.place.place_name}}</td>
+                <td>
+                    <a href="{% url 'Admin:scaccept' i.id %}">Accept</a></td>
+            </tr>
+                {% endfor %}
+        </table>
+    </form>
+</body>
+{% if msg %}
+<script>
+        alert("{{msg}}")
+        window.location="{% url 'Admin:scverification' %}";
+</script>
+{% endif %}
+</html>

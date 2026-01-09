@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Request</title>
+</head>
+
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <table align="center" border>
+            <tr>
+                <td>SINO</td>
+                <td>Details</td>
+                <td>Todate</td>
+                <td>User Name</td>
+                <td>Email</td>
+                <td>Contact</td>
+                <td>Status</td>
+                <td>Action</td>
+            </tr>
+             <tr>
+                 {% for i in sc %}
+
+                <td>{{forloop.counter }}</td>
+                <td>{{i.request_details}}</td>
+                <td>{{i.request_todate}}</td>
+                <td>{{i.user.user_name}}</td>
+                <td>{{i.user.user_email}}</td>
+                <td>{{i.user.user_contact}}</td>
+                <td>{{i.request_emergency}}</td>
+                <td>
+                    
+                </td>
+            </tr>
+                {% endfor %}
+        </table>
+    </form>
+</body>
+
+</html>

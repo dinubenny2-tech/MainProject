@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Date</title>
+</head>
+
+<body>
+    <form action="" method="post">
+        <h2>Visit Date</h2>
+        {% csrf_token %}
+        <table align="center" border>
+            <tr>
+                <td>Visit Date</td>
+                <td><input type="date" name="txt_date" id="txt_date"></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input type="submit" value="submit"></td>
+            </tr>
+        </table>
+    </form>
+</body>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location = "{% url 'Worker:myworks' %}";
+</script>
+{% endif %}
+</html>
