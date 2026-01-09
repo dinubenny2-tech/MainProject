@@ -21,5 +21,11 @@ class tbl_complaint(models.Model):
     complaint_reply=models.CharField(max_length=50)
     complaint_status=models.IntegerField(default=0)
     user=models.ForeignKey(tbl_user,on_delete=models.CASCADE)
+class tbl_rating(models.Model):
+    rating_content=models.CharField(null=True)
+    rating_value=models.CharField(null=True)
+    rating_datetime=models.DateField(auto_now_add=True)
+    user=models.ForeignKey(tbl_user,on_delete=models.CASCADE)
+    servicecentre=models.ForeignKey(tbl_servicecentre,on_delete=models.CASCADE)
 # Create your models here.
 
