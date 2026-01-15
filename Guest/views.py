@@ -4,6 +4,9 @@ from Guest.models import*
 from ServiceCentre.models import*
 from Worker.models import*
 
+def index(request):
+    return render(request,'Guest/index.html')
+
 def userregistration(request):
     district=tbl_district.objects.all()
     place=tbl_place.objects.all()

@@ -1,24 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View File</title>
 </head>
+
 <body>
     <form action="" method="post" enctype="multipart/form-data">
+        <h2 align="center">Product Details </h2>
         {% csrf_token %}
         <table border="2" align="center" border>
-            <tr>
-                <td>file</td>
-                <td>bill</td>
-            </tr>
+            
             {% for i in work %}
             <tr>
+                <td>File</td>
                 <td><img src="{{i.product_photo.url}}" alt="Product" width="300" height="300"></td>
+            </tr>
+            <tr>
+                <td>Bill</td>
                 <td><img src="{{i.product_bill.url}}" alt="Bill" width="300" height="300"></td>
             </tr>
+            
+            <tr>
+                <td colspan="2"align="center"><a href="{% url 'Worker:form' i.id %}" >Replacement Form</a></td>
+            </tr>
             {% endfor %}
-        </table></form>
+        </table>
+    </form>
 </body>
+
 </html>

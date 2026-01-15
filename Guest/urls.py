@@ -7,6 +7,7 @@ urlpatterns = [
   path('login/',views.login,name="login"),  
   path('ajaxplace/',views.ajaxplace, name='ajaxplace'),
   path('scregistration/',views.scregistration,name="scregistration"),
+  path('index/',views.index,name="index"),
   
    
      

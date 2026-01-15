@@ -78,8 +78,8 @@ def upload(request,id):
     data=tbl_request.objects.filter(user=request.session['uid'])
     rdata=tbl_request.objects.get(id=id)
     if request.method=="POST":
-        photo=request.POST.get('file_photo')
-        bill=request.POST.get('file_bill')
+        photo=request.FILES.get('file_photo')
+        bill=request.FILES.get('file_bill')
         rdata.product_photo=photo
         rdata.product_bill=bill
         rdata.request_status=6

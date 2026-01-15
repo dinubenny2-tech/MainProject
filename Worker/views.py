@@ -58,7 +58,7 @@ def myworks(request):
     return render(request,'Worker/MyWorks.html',{'data':data,'replacement':replacement,'repair':repair})
 def replacement(request,rid):
      data=tbl_request.objects.get(id=rid)
-     data.request_status = 6
+     data.request_status = 5
      data.save()
      return render(request,'Worker/MyWorks.html',{'msg':"Product need Replacement.."})
 def repair(request,aid):
@@ -67,8 +67,7 @@ def repair(request,aid):
      data.save()
      return render(request,'Worker/MyWorks.html',{'msg':"Product need Repair.."})
 def viewfile(request,id):
-   
-    data=tbl_request.objects.filter(id=id,request_status=7)
+    data=tbl_request.objects.filter(id=id,request_status=6)
     return render(request,'Worker/ViewFile.html',{"work":data})
 def todate(request,id):
     data=tbl_request.objects.get(id=id)
@@ -80,4 +79,24 @@ def todate(request,id):
         return render(request,'Worker/Todate.html',{'msg':"Date Uploaded.."})
     else:
         return render(request,'Worker/Todate.html')
+def form(request,id):
+     data=tbl_request.objects.get(id=id)
+     rdata=tbl_request.objects.get(id=request.session['wid'])
+     if  request.method=="POST":
+        code=request.POST.get("txt_code")
+        sino=request.POST.get("txt_sino")
+        qty=request.POST.get("txt_qty")
+        vol=request.POST.get("txt_vol")
+        amp=request.POST.get("txt_amp")
+        app=request.POST.get("txt_app")
+        period=request.POST.get("txt_period")
+        complaint=request.POST.get("txt_complaint")
+        status=request.POST.get("txt_action")
+        tbl_replacement.objects.create(replacement_code=code,replacement_sino=sino,replacement_qty=qty,replacement_voltage=vol,replacemant_ampere=amp,replacement_app=app,replacement_period=period,replacement_complaint=complaint,replacement_status=status,request=data)
+        return render(request,'Worker/Form.html',{'data':rdata,'msg':"Replacement Form Uploaded.."})
+     else:
+        return render(request,'Worker/Form.html')
+         
+def assessment(request):
+     return render(request,'Worker/Assessment.html')
 # Create your views here.

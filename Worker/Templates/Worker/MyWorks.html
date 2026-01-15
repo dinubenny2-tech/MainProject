@@ -76,7 +76,7 @@
                     {% else %}
                     Not Emergency
                     {% endif %}</td>
-                <td>{% if i.request_status == 7 %}
+                <td>{% if i.request_status == 6 %}
                      <a href="{% url 'Worker:viewfile' i.id %}">View File</a>
                     {% else %}
                     File pending..
