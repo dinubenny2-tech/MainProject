@@ -9,6 +9,8 @@ class tbl_request(models.Model):
     request_status=models.IntegerField(default=0)
     request_amount=models.CharField(max_length=50)
     request_emergency=models.IntegerField(null=True)
+    request_starttime=models.DateTimeField(null=True)
+    request_endtime=models.DateTimeField(null=True)
     user=models.ForeignKey(tbl_user,on_delete=models.CASCADE)
     servicecentre=models.ForeignKey(tbl_servicecentre,on_delete=models.CASCADE,null=True)
     worker=models.ForeignKey(tbl_worker,on_delete=models.CASCADE,null=True)

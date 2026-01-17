@@ -11,4 +11,6 @@ urlpatterns = [
   path('request/',views.request,name="request"),
   path('myrequest/',views.myrequest,name="myrequest"),
   path('upload/<int:id>',views.upload,name="upload"),
+  path('viewform/<int:id>',views.viewform,name='viewform'),
+
 ]

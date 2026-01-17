@@ -1,14 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from Guest.models import*
 from ServiceCentre.models import*
 from Worker.models import*
 from User.models import*
-
+from datetime import datetime
 def HomePage(request):
-    return render(request,'Worker/HomePage.html')
+    if "wid" not in request.sesion:
+        return redirect("Guest/Login.html")
+    else:   
+        return render(request,'Worker/HomePage.html')
 def myprofile(request):
-    wdata=tbl_worker.objects.get(id=request.session["wid"])
-    return render(request,'Worker/MyProfile.html',{"wdata":wdata})
+    if "wid" not in request.sesion:
+        return redirect("Guest/Login.html")
+    else:
+        wdata=tbl_worker.objects.get(id=request.session["wid"])
+        return render(request,'Worker/MyProfile.html',{"wdata":wdata})
 def editprofile(request):
     wdata=tbl_worker.objects.get(id=request.session["wid"])
     if request.method=="POST":
@@ -43,8 +49,13 @@ def changepassword(request):
     else:
         return render(request,'Worker/ChangePassword.html')
 def viewwork(request):
-    data=tbl_request.objects.filter(request_status=3)
-    return render(request,'Worker/ViewWork.html',{"work":data})
+    if "wid" not in request.sesion:
+        return redirect("Guest/Login.html")
+    else:
+        workerdata=tbl_worker.objects.get(id=request.session['wid'])
+        data=tbl_request.objects.filter(request_status=3,servicecentre=workerdata.servicecentre_id)
+
+        return render(request,'Worker/ViewWork.html',{"work":data})
 def join(request,aid):
      data=tbl_request.objects.get(id=aid)
      data.request_status = 4
@@ -52,10 +63,13 @@ def join(request,aid):
      data.save()
      return render(request,'Worker/ViewWork.html',{'msg':"Work Accepted.."})
 def myworks(request):
-    data=tbl_request.objects.filter(request_status=4) 
-    replacement=tbl_request.objects.filter(request_status__gte=5,request_status__lte=8)
-    repair=tbl_request.objects.filter(request_status__gte=9)
-    return render(request,'Worker/MyWorks.html',{'data':data,'replacement':replacement,'repair':repair})
+    if "wid" not in request.sesion:
+        return redirect("Guest/Login.html")
+    else:
+        data=tbl_request.objects.filter(request_status=4) 
+        replacement=tbl_request.objects.filter(request_status__gte=5,request_status__lte=8)
+        repair=tbl_request.objects.filter(request_status=9)
+        return render(request,'Worker/MyWorks.html',{'data':data,'replacement':replacement,'repair':repair})
 def replacement(request,rid):
      data=tbl_request.objects.get(id=rid)
      data.request_status = 5
@@ -81,7 +95,6 @@ def todate(request,id):
         return render(request,'Worker/Todate.html')
 def form(request,id):
      data=tbl_request.objects.get(id=id)
-     rdata=tbl_request.objects.get(id=request.session['wid'])
      if  request.method=="POST":
         code=request.POST.get("txt_code")
         sino=request.POST.get("txt_sino")
@@ -92,11 +105,15 @@ def form(request,id):
         period=request.POST.get("txt_period")
         complaint=request.POST.get("txt_complaint")
         status=request.POST.get("txt_action")
-        tbl_replacement.objects.create(replacement_code=code,replacement_sino=sino,replacement_qty=qty,replacement_voltage=vol,replacemant_ampere=amp,replacement_app=app,replacement_period=period,replacement_complaint=complaint,replacement_status=status,request=data)
-        return render(request,'Worker/Form.html',{'data':rdata,'msg':"Replacement Form Uploaded.."})
+        tbl_replacement.objects.create(replacement_code=code,replacement_sino=sino,replacement_qty=qty,replacement_voltage=vol,replacement_ampere=amp,replacement_app=app,replacement_period=period,replacement_complaint=complaint,replacement_status=status,request=data)
+        data.request_status=7
+        data.request_endtime=datetime.now()
+        data.save()             
+        return render(request,'Worker/Form.html',{'msg':"Replacement Form Uploaded.."})
      else:
-        return render(request,'Worker/Form.html')
+        return render(request,'Worker/Form.html',{'data':data})
          
 def assessment(request):
      return render(request,'Worker/Assessment.html')
+
 # Create your views here.

@@ -51,7 +51,13 @@
                     Replacement
                     {% elif i.request_status == 6 %}
                     Repair
-                    {% else %}
+                    {% elif i.request_status == 7 %}
+                    Replacement Form Uploaded
+                    {% elif i.request_status == 9 %}
+                    File Uploaded
+                    {% elif i.request_status == 10 %}
+                    Visit Date Added
+                    {% elif i.request_status == 2 %}
                     Rejected
                     {% endif %}
                 </td>

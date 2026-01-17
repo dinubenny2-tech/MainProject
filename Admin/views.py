@@ -2,11 +2,15 @@ from django.shortcuts import render,redirect
 from Admin.models import*
 from Guest.models import*
 from User.models import*
+from datetime import datetime
 
 
 # Create your views here.
 def HomePage(request):
-    return render(request,"Admin/HomePage.html")
+    if "aid" not in request.sesion:
+        return redirect("Guest/Login.html")
+    else:
+        return render(request,"Admin/HomePage.html")
 
 def AdminRegistration(request):
     data=tbl_admin.objects.all()
@@ -121,16 +125,25 @@ def editsubcategory(request,id):
     else:    
        return render(request,'Admin/Subcategory.html',{'editdata':editdata,'category':c})          
 def userlist(request):
-    userdata=tbl_user.objects.all()
-    return render(request,'Admin/UserList.html',{"users":userdata})
+    if "aid" not in request.sesion:
+        return redirect("Guest/Login.html")
+    else:
+        userdata=tbl_user.objects.all()
+        return render(request,'Admin/UserList.html',{"users":userdata})
 def sclist(request):
-    scdata=tbl_servicecentre.objects.all()
-    return render(request,'Admin/SCList.html',{"sc":scdata})
+    if "aid" not in request.sesion:
+        return redirect("Guest/Login.html")
+    else:
+        scdata=tbl_servicecentre.objects.all()
+        return render(request,'Admin/SCList.html',{"sc":scdata})
 def scverification(request):
-    pending=tbl_servicecentre.objects.filter(servicecentre_status=0)
-    accepted=tbl_servicecentre.objects.filter(servicecentre_status=1)
-    rejected=tbl_servicecentre.objects.filter(servicecentre_status=2)
-    return render(request,'Admin/SCVerification.html',{"pending":pending,'accepted':accepted,'rejected':rejected})
+    if "aid" not in request.sesion:
+        return redirect("Guest/Login.html")
+    else:
+        pending=tbl_servicecentre.objects.filter(servicecentre_status=0)
+        accepted=tbl_servicecentre.objects.filter(servicecentre_status=1)
+        rejected=tbl_servicecentre.objects.filter(servicecentre_status=2)
+        return render(request,'Admin/SCVerification.html',{"pending":pending,'accepted':accepted,'rejected':rejected})
 def scaccept(request,aid):
      scdata=tbl_servicecentre.objects.get(id=aid)
      scdata.servicecentre_status = 1
@@ -142,11 +155,15 @@ def screject(request,rid):
      scdata.save()
      return render(request,'Admin/SCVerification.html',{'msg':"Rejected.."})
 def viewrequest(request):
-    data=tbl_request.objects.all()
-    return render(request,'Admin/ViewRequest.html',{"sc":data})
+    if "aid" not in request.sesion:
+        return redirect("Guest/Login.html")
+    else:
+        data=tbl_request.objects.all()
+        return render(request,'Admin/ViewRequest.html',{"sc":data})
 def accept(request,aid):
      data=tbl_request.objects.get(id=aid)
      data.request_status = 1
+     data.request_starttime=datetime.now()
      data.save()
      return render(request,'Admin/ViewRequest.html',{'msg':"Accepted.."})
 def reject(request,rid):

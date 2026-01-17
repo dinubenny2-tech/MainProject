@@ -41,6 +41,8 @@
                     File Uploaded
                     {% elif i.request_status == 10 %}
                     Worker Will Visit 
+                    {% elif i.request_status == 7 %}
+                    <a href="{% url 'User:viewform' i.id %}">Replacement Form</a> 
                     {% else %}
                     Pending
                     {% endif %}

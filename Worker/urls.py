@@ -15,4 +15,6 @@ urlpatterns = [
     path('todate/<int:id>',views.todate,name="todate"),
     path('form/<int:id>',views.form,name='form'),
     path('assessment/',views.assessment,name='assessment'),
+    
+
 ]

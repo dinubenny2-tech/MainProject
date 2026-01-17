@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form</title>
+    <title>View Form</title>
 </head>
-
 <body>
-    <form action="" method="post">
+     <form action="" method="post">
         <h4 align="center">Contact Information</h4>
         {% csrf_token %}
         <table align="center" border>
@@ -46,41 +44,41 @@
         <table align="center" border>
             <tr>
                 <td>product Code</td>
-                <td><input type="text" name="txt_code" id="txt_code"></td>
+                <td>{{rdata.replacement_code}}</td>
             </tr>
             <tr>
                 <td>Product SINO</td>
-                <td><input type="text" name="txt_sino" id="txt_sino"></td>
+                <td>{{rdata.replacement_sino}}</td>
             </tr>
             <tr>
                 <td>Product Quantity</td>
-                <td><input type="text" name="txt_qty" id="txt_qty"></td>
+                <td>{{rdata.replacement_qty}}</td>
             </tr>
             <tr>
                 <td>Voltage</td>
-                <td><input type="text" name="txt_vol" id="txt_vol"></td>
+                <td>{{rdata.replacement_voltage}}</td>
             </tr>
             <tr>
                 <td>Ampere</td>
-                <td><input type="text" name="txt_amp" id="txt_amp"></td>
+                <td>{{rdata.replacement_ampere}}</td>
             </tr>
             <tr>
                 <td>Application</td>
-                <td><input type="text" name="txt_app" id="txt_app"></td>
+                <td>{{rdata.replacement_app}}</td>
             </tr>
             <tr>
                 <td>Service Period</td>
-                <td><input type="text" name="txt_period" id="txt_period"></td>
+                <td>{{rdata.replacement_period}}</td>
             </tr>
             <tr>
                 <td>Complaint</td>
-                <td><input type="text" name="txt_complaint" id="txt_complaint"></td>
+                <td>{{rdata.replacement_complaint}}</td>
             </tr>
             <tr>
                 <td>Action Taken</td>
-                <td><textarea name="txt_action" id="txt_action"></textarea></td>
+                <td>{{rdata.replacement_status}}</td>
             </tr>
-            <tr><td colspan="2" align="center"><input type="submit" value="submit"></td></tr>
+            
         </table>
        
         <h4>Service Engineer</h4>
@@ -104,10 +102,4 @@
         </table>
     </form>
 </body>
-{% if msg %}
-<script>
-    alert("{{msg}}")
-    window.location = "{% url 'Worker:myworks' %}";
-</script>
-{% endif %}
 </html>
