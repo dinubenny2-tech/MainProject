@@ -3,52 +3,79 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Worker</title>
+    <title>View Worker Requests</title>
 </head>
 
 <body>
-    <form action="" method="post">
-        {% csrf_token %}
-        <table align="center" border>
-            <tr>
-                <td>SINO</td>
-                <td>Details</td>
-                <td>Todate</td>
-                <td>User Name</td>
-                <td>Email</td>
-                <td>Contact</td>
-                <td>Status</td>
-                <td>Action</td>
-            </tr>
-             <tr>
-                 {% for i in work %}
 
-                <td>{{forloop.counter }}</td>
-                <td>{{i.request_details}}</td>
-                <td>{{i.request_todate}}</td>
-                <td>{{i.user.user_name}}</td>
-                <td>{{i.user.user_email}}</td>
-                <td>{{i.user.user_contact}}</td>
-                <td>{% if i.request_emergency == 1 %}
-                    Emergency
-                    {% else %}
-                    Not Emergency
-                    {% endif %}</td>
-                <td>
-                   <a href="{% url 'Worker:join' i.id %}">Join</a>
-                   
-                </td>
-            </tr>
-                {% endfor %}
-           
-        </table>
-    </form>
-</body>
+<h2 align="center">My Works</h2>
+
+<table align="center" border="1" cellpadding="8">
+
+    <tr>
+        <th>SINO</th>
+        <th>Details</th>
+        <th>To Date</th>
+        <th>User Name</th>
+        <th>Email</th>
+        <th>Contact</th>
+        <th>Emergency</th>
+        <th>Action</th>
+    </tr>
+
+    {% for i in work %}
+    <tr>
+
+        <td>{{ forloop.counter }}</td>
+
+        <td>{{ i.request_details }}</td>
+
+        <td>{{ i.request_todate|default:"-" }}</td>
+
+        <td>
+            {% if i.user %}
+                {{ i.user.user_name }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+
+        <td>{{ i.user.user_email|default:"-" }}</td>
+        <td>{{ i.user.user_contact|default:"-" }}</td>
+
+        <td>
+            {% if i.request_emergency == 1 %}
+                <span style="color:red;">Emergency</span>
+            {% else %}
+                Normal
+            {% endif %}
+        </td>
+
+        <td>
+            {% if i.request_status == 3 %}
+                <a href="{% url 'Worker:join' i.id %}">Join</a>
+            {% else %}
+                Joined
+            {% endif %}
+        </td>
+
+    </tr>
+
+    {% empty %}
+    <tr>
+        <td colspan="8" align="center">No Works Assigned</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+
 {% if msg %}
 <script>
-    alert("{{msg}}")
+    alert("{{msg}}");
     window.location = "{% url 'Worker:myworks' %}";
 </script>
 {% endif %}
+
+</body>
 </html>

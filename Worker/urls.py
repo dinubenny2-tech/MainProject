@@ -15,6 +15,11 @@ urlpatterns = [
     path('todate/<int:id>',views.todate,name="todate"),
     path('form/<int:id>',views.form,name='form'),
     path('assessment/',views.assessment,name='assessment'),
+    path('risk_assessment/<int:id>/', views.risk_assessment, name='risk_assessment'),
+    path('complete_work/<int:id>/', views.complete_work, name='complete_work'),
+    path('start_work/<int:id>/', views.start_work, name='start_work'),
+    path('end_work/<int:id>/', views.end_work, name='end_work'),
+
     
 
 ]

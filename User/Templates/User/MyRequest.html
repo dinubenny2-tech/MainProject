@@ -8,47 +8,100 @@
 </head>
 
 <body>
-    <form action="" method="post">
+    <form method="post">
         {% csrf_token %}
-        <h2 align="center">My Requests</h2>
-        <table align="center" border>
-            <tr>
-                <td>SINO</td>
-                <td>Details</td>
-                <td>Todate</td>
-                <td>Service Centre Details</td>
-                <td>Worker Details</td>
-                <td>Action</td>
-            </tr>
-             <tr>
-                 {% for i in sc %}
 
-                <td>{{forloop.counter }}</td>
-                <td>{{i.request_details}}</td>
-                <td>{{i.request_todate}}</td>
-                <td>{{i.servicecentre.servicecentre_name}}  <br>
-                    {{i.servicecentre.servicecentre_email}} <br>
-                    {{i.servicecentre.servicecentre_contact}}</td>
-                <td>{{i.worker.worker_name}}  <br>
-                    {{i.worker.worker_email}} <br>
-                    {{i.worker_contact}}   </td>
+        <h2 align="center">My Requests</h2>
+
+        <table align="center" border="1" cellpadding="8">
+            <tr>
+                <th>SINO</th>
+                <th>Details</th>
+                <th>Todate</th>
+                <th>Service Centre Details</th>
+                <th>Worker Details</th>
+                <th>Action</th>
+            </tr>
+
+            {% for i in sc %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+
+                <td>{{ i.request_details }}</td>
+
+                <td>{{ i.request_todate|default:"-" }}</td>
+
                 <td>
-                    {% if i.request_status == 5 %}
-                   <a href="{% url 'User:upload' i.id %}">For Replacement</a>
-                    {% elif i.request_status == 9 %}
-                    For Repair
-                    {% elif i.request_status == 6 %}
-                    File Uploaded
-                    {% elif i.request_status == 10 %}
-                    Worker Will Visit 
-                    {% elif i.request_status == 7 %}
-                    <a href="{% url 'User:viewform' i.id %}">Replacement Form</a> 
+                    {% if i.servicecentre %}
+                    {{ i.servicecentre.servicecentre_name }}<br>
+                    {{ i.servicecentre.servicecentre_email }}<br>
+                    {{ i.servicecentre.servicecentre_contact }}
                     {% else %}
-                    Pending
+                    <b style="color:red;">Service Centre Not Assigned</b>
                     {% endif %}
                 </td>
+
+                <td>
+                    {% if i.worker %}
+                    {{ i.worker.worker_name }}<br>
+                    {{ i.worker.worker_email }}<br>
+                    {{ i.worker.worker_contact }}
+                    {% else %}
+                    <b style="color:red;">Worker Not Assigned</b>
+                    {% endif %}
+                </td>
+
+                <td>
+
+                    {% if i.request_status == 1 %}
+                    Request Accepted By Admin.
+
+                    {% elif i.request_status == 2 %}
+                    Request Rejected By Admin.
+
+                    {% elif i.request_status == 3 %}
+                    Request Assigned.
+
+                    {% elif i.request_status == 4 %}
+                    Worker Took Your Request.
+
+                    {% elif i.request_status == 5 %}
+                    <a href="{% url 'User:upload' i.id %}">For Replacement</a>
+
+                    {% elif i.request_status == 6 %}
+                    File Uploaded
+
+                    {% elif i.request_status == 7 %}
+
+                    {% for r in i.tbl_replacement_set.all %}
+                    {% if r.replacement_pdf %}
+                    <a href="{{ r.replacement_pdf.url }}" target="_blank">
+                        Download Replacement PDF
+                    </a>
+                    {% endif %}
+                    {% empty %}
+                    File Not Available
+                    {% endfor %}
+
+                    {% elif i.request_status == 9 %}
+                    For Repair
+
+                    {% elif i.request_status == 10 %}
+                    Worker Will Visit
+
+                    {% else %}
+                    Pending
+
+                    {% endif %}
+
+                </td>
+
             </tr>
-                {% endfor %}
+            {% empty %}
+            <tr>
+                <td colspan="6" align="center">No Requests Found</td>
+            </tr>
+            {% endfor %}
         </table>
     </form>
 </body>

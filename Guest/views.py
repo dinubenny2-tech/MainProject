@@ -14,6 +14,7 @@ def userregistration(request):
         name=request.POST.get("txt_name")
         email=request.POST.get("txt_email")
         contact=request.POST.get("txt_contact")
+        mobile=request.POST.get("txt_mobile")
         address=request.POST.get("txt_address")
         password=request.POST.get("txt_password")
         photo=request.FILES.get("file_photo")
@@ -23,7 +24,7 @@ def userregistration(request):
             return render(request,"Guest/UserRegistration.html",{'msg':"Email Already Exist"})
         else:
 
-            tbl_user.objects.create(user_name=name,user_email=email,user_contact=contact,user_address=address,user_password=password,
+            tbl_user.objects.create(user_name=name,user_email=email,user_contact=contact,user_mobile=mobile,user_address=address,user_password=password,
             user_photo=photo,place=place,)
             return render(request,'Guest/UserRegistration.html',{'msg':"registered"})
     else:

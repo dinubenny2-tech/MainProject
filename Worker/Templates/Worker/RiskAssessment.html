@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Risk Assessment</title>
+</head>
+<body>
+    <h2 align="center">Risk Assessment for: {{ data.request_details }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <table align="center" border="1" cellpadding="5">
+            <tr>
+                <td><input type="checkbox" name="check" value="Fire extinguisher available within 6m reach?"> Fire extinguisher available within 6m reach?</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="check" value="Clear understanding of the product and its mechanism?"> Clear understanding of the product and its mechanism?</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="check" value="Emergency contact number or other information displayed?"> Emergency contact number or other information displayed?</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="check" value="PPE (helmet, jacket, shoes) available?"> PPE (helmet, jacket, shoes) available?</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="check" value="Any ongoing work overhead/below?"> Any ongoing work overhead/below?</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="check" value="Any overhead power lines?"> Any overhead power lines?</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="check" value="Safety mat available on the floor?"> Safety mat available on the floor?</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="check" value="Safety gloves available?"> Safety gloves available?</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="check" value="Equipment in shutdown condition?"> Equipment in shutdown condition?</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="check" value="Working in tight area?"> Working in tight area?</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="check" value="Over extension (stretching of body to reach product)?"> Over extension (stretching of body to reach product)?</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="check" value="Any hazardous material near working area?"> Any hazardous material near working area?</td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <input type="submit" value="Proceed to Work">
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    {% if msg %}
+    <script>alert("{{ msg }}")</script>
+    {% endif %}
+</body>
+</html>

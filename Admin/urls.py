@@ -29,5 +29,7 @@ urlpatterns = [
      path('reject/<int:rid>',views.reject,name="reject"),
      path('viewsc/<int:rid>',views.viewsc,name="viewsc"),
      path('assign/<int:sid>/<int:rid>/',views.assign,name="assign"),
+     path('viewcomplaint/',views.viewcomplaint,name="viewcomplaint"),
+     path('reply/<int:id>',views.reply,name="reply"),
 
 ]

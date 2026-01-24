@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Reply</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <table align="center" border>
+            <h2 align="center">Replies</h2>
+            <tr>
+                <td>Complaint</td>
+                <td>Reply</td>
+            
+            </tr>
+            <tr>
+                {% for i in data %}
+
+                <td>{{i.complaint_content}}</td>
+                <td>{{i.complaint_reply}}</td>
+                
+            </tr>
+            {% endfor %}
+</body>
+</html>

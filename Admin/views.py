@@ -3,11 +3,11 @@ from Admin.models import*
 from Guest.models import*
 from User.models import*
 from datetime import datetime
-
+from django.utils import timezone
 
 # Create your views here.
 def HomePage(request):
-    if "aid" not in request.sesion:
+    if "aid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         return render(request,"Admin/HomePage.html")
@@ -125,19 +125,19 @@ def editsubcategory(request,id):
     else:    
        return render(request,'Admin/Subcategory.html',{'editdata':editdata,'category':c})          
 def userlist(request):
-    if "aid" not in request.sesion:
+    if "aid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         userdata=tbl_user.objects.all()
         return render(request,'Admin/UserList.html',{"users":userdata})
 def sclist(request):
-    if "aid" not in request.sesion:
+    if "aid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         scdata=tbl_servicecentre.objects.all()
         return render(request,'Admin/SCList.html',{"sc":scdata})
 def scverification(request):
-    if "aid" not in request.sesion:
+    if "aid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         pending=tbl_servicecentre.objects.filter(servicecentre_status=0)
@@ -155,17 +155,27 @@ def screject(request,rid):
      scdata.save()
      return render(request,'Admin/SCVerification.html',{'msg':"Rejected.."})
 def viewrequest(request):
-    if "aid" not in request.sesion:
+    if "aid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         data=tbl_request.objects.all()
         return render(request,'Admin/ViewRequest.html',{"sc":data})
-def accept(request,aid):
-     data=tbl_request.objects.get(id=aid)
-     data.request_status = 1
-     data.request_starttime=datetime.now()
-     data.save()
-     return render(request,'Admin/ViewRequest.html',{'msg':"Accepted.."})
+    
+
+
+def accept(request, aid):
+    data = tbl_request.objects.get(id=aid)
+
+    data.request_status = 1
+    data.request_starttime = timezone.now()   
+    data.request_endtime = None               
+
+    data.save()
+
+    return redirect("Admin:viewrequest")
+
+
+
 def reject(request,rid):
      data=tbl_request.objects.get(id=rid)
      data.servicecentre_status = 2
@@ -182,3 +192,22 @@ def assign(request,rid,sid):
     reqdata.request_status=3
     reqdata.save()
     return render(request,'Admin/ViewRequest.html',{'msg':"Assigned.."})
+def viewcomplaint(request):
+        data=tbl_complaint.objects.all()
+        return render(request,'Admin/ViewComplaint.html',{"data":data})
+def reply(request,id):
+    
+    cdata=tbl_complaint.objects.get(id=id)
+    if request.method=="POST":
+        reply=request.POST.get('txt_reply')
+        
+        cdata.complaint_reply=reply
+        cdata.complaint_status=1
+        cdata.save()
+        return render(request,'Admin/Reply.html',{'msg':"Replied.."})
+    else:
+        return render(request,'Admin/Reply.html')
+        
+        # data=tbl_complaint.objects.all()
+        # return render(request,'Admin/ViewComplaint.html',{"data":data})
+

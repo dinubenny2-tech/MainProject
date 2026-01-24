@@ -4,12 +4,12 @@ from ServiceCentre.models import*
 from User.models import*
 
 def HomePage(request):
-    if "scid" not in request.sesion:
+    if "scid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         return render(request,'ServiceCentre/HomePage.html')
 def myprofile(request):
-    if "scid" not in request.sesion:
+    if "scid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         scdata=tbl_servicecentre.objects.get(id=request.session["scid"])
@@ -48,7 +48,7 @@ def changepassword(request):
     else:
         return render(request,'ServiceCentre/ChangePassword.html')
 def wregistration(request):
-    if "scid" not in request.sesion:
+    if "scid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         servicecentre=tbl_servicecentre.objects.get(id=request.session["scid"])
@@ -73,13 +73,13 @@ def wregistration(request):
         else:
             return render(request,'ServiceCentre/WorkerRegistration.html',{'district':district,'place':place,'wdata':wdata})
 def viewrequest(request):
-    if "scid" not in request.sesion:
+    if "scid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         data=tbl_request.objects.all()
         return render(request,'ServiceCentre/ViewRequest.html',{"sc":data})
 def viewworker(request):
-    if "scid" not in request.sesion:
+    if "scid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         data=tbl_worker.objects.all()

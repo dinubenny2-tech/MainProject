@@ -20,7 +20,7 @@ class tbl_complaint(models.Model):
     complaint_title=models.CharField(null=True)
     complaint_content=models.CharField(null=True)
     complaint_date=models.DateField(auto_now_add=True)
-    complaint_reply=models.CharField(max_length=50)
+    complaint_reply=models.CharField(null=True)
     complaint_status=models.IntegerField(default=0)
     user=models.ForeignKey(tbl_user,on_delete=models.CASCADE)
 class tbl_rating(models.Model):

@@ -1,140 +1,164 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Works</title>
+    <style>
+        table { border-collapse: collapse; width: 95%; }
+        th, td { padding: 8px; text-align: center; }
+        .done { color: green; font-weight: bold; }
+        .late { color: red; font-weight: bold; }
+        .running { color: orange; font-weight: bold; }
+        .cancelled { color: red; font-weight: bold; }
+    </style>
 </head>
 
 <body>
-    <form action="" method="post">
-        {% csrf_token %}
-        <table align="center" border>
-            <tr>
-                <td>SINO</td>
-                <td>Details</td>
-                <td>Todate</td>
-                <td>User Name</td>
-                <td>Email</td>
-                <td>Contact</td>
-                <td>Status</td>
-                <td>Action</td>
-            </tr>
-             <tr>
-                 {% for i in data %}
+<h2 align="center">My Works</h2>
 
-                <td>{{forloop.counter }}</td>
-                <td>{{i.request_details}}</td>
-                <td>{{i.request_todate}}</td>
-                <td>{{i.user.user_name}}</td>
-                <td>{{i.user.user_email}}</td>
-                <td>{{i.user.user_contact}}</td>
-                <td>{% if i.request_emergency == 1 %}
-                    Emergency
-                    {% else %}
-                    Not Emergency
-                    {% endif %}</td>
-                <td>
-                   
-                    <a href="{% url 'Worker:replacement' i.id %}">Replacement/</a>
-                    <a href="{% url 'Worker:repair' i.id %}">Repair</a>
-                    
-                </td>
-                
-            </tr>
-            {% endfor %}
-        </table>
-    </form>
+<!-- ================= CURRENT WORKS ================= -->
+<table align="center" border="1">
+<tr>
+    <th>SINO</th>
+    <th>Details</th>
+    <th>To Date</th>
+    <th>User</th>
+    <th>Contact</th>
+    <th>Emergency</th>
+    <th>Remaining Time</th>
+    <th>Action</th>
+</tr>
+
+{% for i in data %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ i.request_details }}</td>
+    <td>{{ i.request_todate|default:"-" }}</td>
+    <td>{{ i.user.user_name }}</td>
+    <td>{{ i.user.user_contact }}</td>
+
+    <td>
+        {% if i.request_emergency == 1 %}
+            <span style="color:red;">Emergency</span>
+        {% else %}
+            Normal
+        {% endif %}
+    </td>
+
+    <td>
+        {% if i.remaining_text == "✓ Completed" %}
+            <span class="done">{{ i.remaining_text }}</span>
+        {% elif i.remaining_text == "Overdue" %}
+            <span class="late">{{ i.remaining_text }}</span>
+        {% elif i.remaining_text == "Not Started" %}
+            Not Started
+        {% else %}
+            <span class="running">{{ i.remaining_text }}</span>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if i.request_status == 4 %}
+            <a href="{% url 'Worker:replacement' i.id %}">Replacement</a> |
+            <a href="{% url 'Worker:repair' i.id %}">Repair</a>
+        {% elif i.request_status == 11 %}
+            <span class="cancelled">Cancelled</span>
+        {% endif %}
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="8">No Works Available</td>
+</tr>
+{% endfor %}
+</table>
+
+<br><br>
+
+<!-- ================= REPLACEMENT ================= -->
+<h2 align="center">For Replacement</h2>
+<table align="center" border="1">
+<tr>
+    <th>SINO</th>
+    <th>Details</th>
+    <th>Start Time</th>
+    <th>User</th>
+    <th>Contact</th>
+    <th>Remaining Time</th>
+    <th>Action</th>
+</tr>
+
+{% for i in replacement %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ i.request_details }}</td>
+    <td>{{ i.request_starttime|default:"-" }}</td>
+    <td>{{ i.user.user_name }}</td>
+    <td>{{ i.user.user_contact }}</td>
+    <td>{{ i.remaining_text }}</td>
+    <td>
+        {% if i.request_status == 6 %}
+            <a href="{% url 'Worker:viewfile' i.id %}">View File</a>
+        {% elif i.request_status == 7 %}
+            Completed
+        {% elif i.request_status == 11 %}
+            <span class="cancelled">Cancelled</span>
+        {% else %}
+            Pending
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+<br><br>
+
+<!-- ================= REPAIR ================= -->
+<h2 align="center">For Repair</h2>
+<table align="center" border="1">
+<tr>
+    <th>SINO</th>
+    <th>Details</th>
+    <th>Start Time</th>
+    <th>User</th>
+    <th>Contact</th>
+    <th>Remaining Time</th>
+    <th>Action</th>
+</tr>
+
+{% for i in repair %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ i.request_details }}</td>
+    <td>{{ i.request_starttime|default:"-" }}</td>
+    <td>{{ i.user.user_name }}</td>
+    <td>{{ i.user.user_contact }}</td>
+    <td>{{ i.remaining_text }}</td>
+    <td>
+        {% if i.request_status == 9 %}
+            <a href="{% url 'Worker:todate' i.id %}">Add Visit Date</a>
+        {% elif i.request_status == 10 %}
+            <a href="{% url 'Worker:risk_assessment' i.id %}">Risk Assessment</a>
+       {% elif i.request_status == 12 %}
+        <a href="{% url 'Worker:start_work' i.id %}">Start Work</a>
+        {% elif i.request_status == 13 %}
+            <span class="done">Completed</span>
+        {% elif i.request_status == 11 %}
+        <span class="cancelled">Cancelled</span>
+        {% elif i.request_status == 11 %}
+            <span class="cancelled">Cancelled</span>
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+</table>
+
 </body>
-<body>
-    <form action="" method="post">
-        <h2 align="center">For Replacement</h2>
-        {% csrf_token %}
-        <table align="center" border>
-            <tr>
-                <td>SINO</td>
-                <td>Details</td>
-                <td>Todate</td>
-                <td>Start Time</td>
-                <td>User Name</td>
-                <td>Email</td>
-                <td>Contact</td>
-                <td>Status</td>
-                <td>Action</td>
-            </tr>
-             <tr>
-                 {% for i in replacement %}
+</html>
 
-                <td>{{forloop.counter }}</td>
-                <td>{{i.request_details}}</td>
-                <td>{{i.request_todate}}</td>
-                <td>{{i.request_starttime}}</td>
-                <td>{{i.user.user_name}}</td>
-                <td>{{i.user.user_email}}</td>
-                <td>{{i.user.user_contact}}</td>
-                <td>{% if i.request_emergency == 1 %}
-                    Emergency
-                    {% else %}
-                    Not Emergency
-                    {% endif %}</td>
-                <td>{% if i.request_status == 6 %}
-                     <a href="{% url 'Worker:viewfile' i.id %}">View File</a>
-                    {% else %}
-                    File pending..
-                   {% endif %}</td>
-                 </tr>
-            {% endfor %}
-        </table>
-    </form>
-</body>
-
-<body>
-    <form action="" method="post">
-        <h2 align="center">For Repair</h2>
-        {% csrf_token %}
-        <table align="center" border>
-            <tr>
-                <td>SINO</td>
-                <td>Details</td>
-                <td>Todate</td>
-                <td>Start Time</td>
-                <td>User Name</td>
-                <td>Email</td>
-                <td>Contact</td>
-                <td>Status</td>
-                <td>Action</td>
-            </tr>
-             <tr>
-                 {% for i in repair %}
-
-                <td>{{forloop.counter }}</td>
-                <td>{{i.request_details}}</td>
-                <td>{{i.request_todate}}</td>
-                <td>{{i.request_starttime}}</td>
-                <td>{{i.user.user_name}}</td>
-                <td>{{i.user.user_email}}</td>
-                <td>{{i.user.user_contact}}</td>
-                <td>{% if i.request_emergency == 1 %}
-                    Emergency
-                    {% else %}
-                    Not Emergency
-                    {% endif %}</td>
-                <td>{% if i.request_status == 9 %}
-                    <a href="{% url 'Worker:todate' i.id %}">Add Visit Date</a>  
-                    {% elif i.request_status == 10 %}Visit Date Added..
-                   {% endif %}
-                   
-                </td>
-                 </tr>
-            {% endfor %}
-        </table>
-    </form>
-</body>
 {% if msg %}
 <script>
-    alert("{{msg}}")
-    window.location = "{% url 'Worker:myworks' %}";
+    alert("{{ msg }}");
+    window.location="{% url 'Worker:myworks' %}";
 </script>
 {% endif %}
-</html>

@@ -11,21 +11,26 @@
     <form action="" method="post">
         {% csrf_token %}
         <h3 align="center">Request</h3>
-        <table align="center" border>
-           
+        <table align="center" border="1" cellpadding="8">
+
             <tr>
                 <td>Emergency</td>
-                <td><input type="radio" name="txt_emergency" id="txt_emergency" value="1">Yes
-                    <input type="radio" name="txt_emergency" id="txt_emergency" value="0">No
+                <td>
+                    <input type="radio" name="txt_emergency" value="1" onclick="toggleReason(true)"> Yes
+                    <input type="radio" name="txt_emergency" value="0" onclick="toggleReason(false)" checked> No
                 </td>
             </tr>
-            <tr>
+
+            <tr id="reasonRow" style="display:none;">
                 <td>Reason For Emergency</td>
-                <td><textarea name="txt_reason" id="txt_reason"required></textarea></td>
+                <td>
+                    <textarea name="txt_reason" id="txt_reason"></textarea>
+                </td>
             </tr>
+
             <tr>
                 <td>Details</td>
-                <td><textarea name="txt_details" id="txt_details"required></textarea></td>
+                <td><textarea name="txt_details" id="txt_details" required></textarea></td>
             </tr>
 
             <tr>
@@ -38,8 +43,23 @@
 {% if msg %}
 <script>
     alert("{{msg}}");
-    window.location = "{% url 'User:request' %}";
+    window.location = "{% url 'User:myrequest' %}";
 </script>
 {% endif %}
 
 </html>
+<script>
+    function toggleReason(isEmergency) {
+        const row = document.getElementById("reasonRow");
+        const reason = document.getElementById("txt_reason");
+
+        if (isEmergency) {
+            row.style.display = "table-row";
+            reason.required = true;
+        } else {
+            row.style.display = "none";
+            reason.required = false;
+            reason.value = "";
+        }
+    }
+</script>

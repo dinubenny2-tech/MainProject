@@ -3,32 +3,55 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View File</title>
+    <title>Product Details</title>
 </head>
 
 <body>
-    <form action="" method="post" enctype="multipart/form-data">
-        <h2 align="center">Product Details </h2>
-        {% csrf_token %}
-        <table border="2" align="center" border>
-            
-            {% for i in work %}
-            <tr>
-                <td>File</td>
-                <td><img src="{{i.product_photo.url}}" alt="Product" width="300" height="300"></td>
-            </tr>
-            <tr>
-                <td>Bill</td>
-                <td><img src="{{i.product_bill.url}}" alt="Bill" width="300" height="300"></td>
-            </tr>
-            
-            <tr>
-                <td colspan="2"align="center"><a href="{% url 'Worker:form' i.id %}" >Replacement Form</a></td>
-            </tr>
-            {% endfor %}
-        </table>
-    </form>
-</body>
 
+<h2 align="center">Product Details</h2>
+
+<table border="1" align="center" cellpadding="10">
+
+    {% if work %}
+    <tr>
+        <th>Product Photo</th>
+        <td>
+            {% if work.product_photo %}
+                <img src="{{ work.product_photo.url }}" width="300">
+            {% else %}
+                No Photo Uploaded
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <th>Bill</th>
+        <td>
+            {% if work.product_bill %}
+                <a href="{{ work.product_bill.url }}" target="_blank">
+                    View / Download Bill
+                </a>
+            {% else %}
+                No Bill Uploaded
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="2" align="center">
+            <a href="{% url 'Worker:form' work.id %}">
+                Replacement Form
+            </a>
+        </td>
+    </tr>
+
+    {% else %}
+    <tr>
+        <td align="center">No Data Found</td>
+    </tr>
+    {% endif %}
+
+</table>
+
+</body>
 </html>

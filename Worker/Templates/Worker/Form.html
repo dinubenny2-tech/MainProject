@@ -1,113 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form</title>
+    <title>Service Work Order Form</title>
 </head>
 
 <body>
-    <form action="" method="post">
-        <h4 align="center">Contact Information</h4>
-        {% csrf_token %}
-        <table align="center" border>
-            <tr>
-                <td>Name</td>
-                <td>Contact</td>
-                <td>Email</td>
-                <td>Address</td>
-                <td>Branch</td>
-                <td>Issue Description</td>
-                <td>Servicecentre</td>
-                <td>Actual Start</td>
-                <td>Actual End</td>
-                <td>Status</td>
 
-            </tr>
-            <tr>
-               
+<h3 align="center">Service Work Order Form</h3>
 
-                <td>{{data.user.user_name}}</td>
-                <td>{{data.user.user_contact}}</td>
-                <td>{{data.user.user_email}}</td>
-                <td>{{data.user.user_address}}</td>
-                <td>{{data.user.place.district.district_name}},
-                    {{data.user.place.place_name}}</td>
-                <td>{{data.request_details}}</td>
-                <td>{{data.servicecentre.servicecentre_name}}</td>
-                <td>{{data.request_starttime}}</td>
-                <td>{{data.request_endtime}}</td>
-                <td></td>
-                
-            </tr>
-        </table>
-        <h4 align="center">Work Order with Complaint Description</h4>
-        <table align="center" border>
-            <tr>
-                <td>product Code</td>
-                <td><input type="text" name="txt_code" id="txt_code"></td>
-            </tr>
-            <tr>
-                <td>Product SINO</td>
-                <td><input type="text" name="txt_sino" id="txt_sino"></td>
-            </tr>
-            <tr>
-                <td>Product Quantity</td>
-                <td><input type="text" name="txt_qty" id="txt_qty"></td>
-            </tr>
-            <tr>
-                <td>Voltage</td>
-                <td><input type="text" name="txt_vol" id="txt_vol"></td>
-            </tr>
-            <tr>
-                <td>Ampere</td>
-                <td><input type="text" name="txt_amp" id="txt_amp"></td>
-            </tr>
-            <tr>
-                <td>Application</td>
-                <td><input type="text" name="txt_app" id="txt_app"></td>
-            </tr>
-            <tr>
-                <td>Service Period</td>
-                <td><input type="text" name="txt_period" id="txt_period"></td>
-            </tr>
-            <tr>
-                <td>Complaint</td>
-                <td><input type="text" name="txt_complaint" id="txt_complaint"></td>
-            </tr>
-            <tr>
-                <td>Action Taken</td>
-                <td><textarea name="txt_action" id="txt_action"></textarea></td>
-            </tr>
-            <tr><td colspan="2" align="center"><input type="submit" value="submit"></td></tr>
-        </table>
-       
-        <h4>Service Engineer</h4>
-        <table>
-            <tr>
-                <td>Signed By</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Date</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Place</td>
-                <td></td>
-            </tr>
-        </table>
-    </form>
-</body>
-{% if msg %}
-<script>
-    alert("{{msg}}")
-    window.location = "{% url 'Worker:myworks' %}";
-</script>
+<form method="post">
+{% csrf_token %}
+
+<!-- ================= CONTACT INFORMATION ================= -->
+
+<h4 align="center">Contact Information</h4>
+
+<table align="center" border="1" cellpadding="8">
+
+<tr>
+<th>Name</th>
+<th>Contact</th>
+<th>Email</th>
+<th>Address</th>
+<th>Branch</th>
+<th>Issue</th>
+<th>Servicecentre</th>
+<th>Actual Start</th>
+<th>Actual End</th>
+<th>Status</th>
+</tr>
+
+<tr>
+<td>{{data.user.user_name}}</td>
+<td>{{data.user.user_contact}}</td>
+<td>{{data.user.user_email}}</td>
+<td>{{data.user.user_address}}</td>
+
+<td>
+{% if data.user.place %}
+{{data.user.place.district.district_name}},
+{{data.user.place.place_name}}
 {% endif %}
+</td>
+
+<td>{{data.request_details}}</td>
+<td>{{data.servicecentre.servicecentre_name}}</td>
+<td>{{data.request_starttime}}</td>
+<td>{{data.request_endtime}}</td>
+<td>{{data.request_status}}</td>
+
+</tr>
+
+</table>
+
+<br><br>
+
+
+<!-- ================= WORK ORDER DETAILS ================= -->
+
+<h4 align="center">Work Order with Complaint Description</h4>
+
+<table align="center" border="1" cellpadding="8">
+
+<tr>
+<td>Product Code</td>
+<td><input type="text" name="txt_code" required></td>
+</tr>
+
+<tr>
+<td>Product SINO</td>
+<td><input type="text" name="txt_sino" required></td>
+</tr>
+
+<tr>
+<td>Product Quantity</td>
+<td><input type="number" name="txt_qty" required></td>
+</tr>
+
+<tr>
+<td>Voltage</td>
+<td><input type="text" name="txt_vol"></td>
+</tr>
+
+<tr>
+<td>Ampere</td>
+<td><input type="text" name="txt_amp"></td>
+</tr>
+
+<tr>
+<td>Application</td>
+<td><input type="text" name="txt_app"></td>
+</tr>
+
+<tr>
+<td>Service Period</td>
+<td><input type="text" name="txt_period"></td>
+</tr>
+
+<tr>
+<td>Complaint</td>
+<td><textarea name="txt_complaint" required></textarea></td>
+</tr>
+
+<tr>
+<td>Action Taken</td>
+<td><textarea name="txt_action" required></textarea></td>
+</tr>
+
+</table>
+
+<br><br>
+
+
+<!-- ================= SIGNATURE SECTION ================= -->
+
+<h4 align="center">Service Engineer</h4>
+
+<table align="center" border="1" cellpadding="8">
+
+<tr>
+<td width="250">Signed By</td>
+<td>
+
+<canvas id="signature-pad"
+        width="350"
+        height="130"
+        style="border:1px solid black;"></canvas>
+
+<br>
+<button type="button" onclick="clearPad()">Clear</button>
+
+<input type="hidden" name="signature_data" id="signature_data">
+
+</td>
+</tr>
+
+<tr>
+<td>Date</td>
+<td>
+<input type="text" value="{{ today }}" readonly>
+</td>
+</tr>
+
+<tr>
+<td>Place</td>
+<td>{{data.user.place.place_name}}</td>
+</tr>
+
+</table>
+
+<br>
+
+<center>
+<input type="submit" value="Submit Form">
+</center>
+
+</form>
+
+
+<!-- ================= SIGNATURE JS ================= -->
+
+<script>
+const canvas = document.getElementById("signature-pad");
+const ctx = canvas.getContext("2d");
+
+let drawing=false;
+
+canvas.onmousedown=(e)=>{
+drawing=true;
+ctx.beginPath();
+ctx.moveTo(e.offsetX,e.offsetY);
+};
+
+canvas.onmousemove=(e)=>{
+if(!drawing) return;
+ctx.lineTo(e.offsetX,e.offsetY);
+ctx.stroke();
+};
+
+canvas.onmouseup=()=>{
+drawing=false;
+saveSignature();
+};
+
+function clearPad(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+document.getElementById("signature_data").value="";
+}
+
+function saveSignature(){
+document.getElementById("signature_data").value =
+canvas.toDataURL("image/png");
+}
+</script>
+
+</body>
 </html>

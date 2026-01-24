@@ -4,7 +4,7 @@ from User.models import *
 from Worker.models import*
 
 def myprofile(request):
-    if "uid" not in request.sesion:
+    if "uid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         userdata=tbl_user.objects.get(id=request.session["uid"])
@@ -43,12 +43,12 @@ def changepassword(request):
     else:
         return render(request,'User/ChangePassword.html')
 def HomePage(request):
-    if "uid" not in request.sesion:
+    if "uid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         return render(request,'User/HomePage.html')
 def complaint(request):
-    if "uid" not in request.sesion:
+    if "uid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         userdata=tbl_user.objects.get(id=request.session['uid'])
@@ -61,7 +61,7 @@ def complaint(request):
             return render(request,'User/Complaint.html')
 
 def viewsc(request):
-    if "uid" not in request.sesion:
+    if "uid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         scdata=tbl_servicecentre.objects.filter(servicecentre_status=1)
@@ -70,7 +70,7 @@ def screquest(request,rid):
      screquest=tbl_request.objects.get(id=rid)
      return render(request,'User/Request.html',{'msg':"Requested.."})
 def request(request):
-    if "uid" not in request.sesion:
+    if "uid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         userdata=tbl_user.objects.get(id=request.session['uid'])
@@ -83,7 +83,7 @@ def request(request):
         else:
             return render(request,'User/Request.html')
 def myrequest(request):
-    if "uid" not in request.sesion:
+    if "uid" not in request.session:
         return redirect("Guest/Login.html")
     else:
         data=tbl_request.objects.filter(user=request.session['uid'])
@@ -110,5 +110,9 @@ def viewform(request,id):
     data=tbl_request.objects.get(id=id)
     rdata=tbl_replacement.objects.get(request=data)
     return render(request,'User/ViewForm.html',{'data':data,'rdata':rdata})
+
+
+
+
 
 # Create your views here.

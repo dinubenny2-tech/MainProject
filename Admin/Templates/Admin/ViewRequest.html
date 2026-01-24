@@ -1,78 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Request</title>
 </head>
 
 <body>
-    <form action="" method="post">
-        {% csrf_token %}
-        <table align="center" border>
-            <h2 align="center">Requests</h2>
-            <tr>
-                <td>SINO</td>
-                <td>Details</td>
-                <td>Todate</td>
-                <td>User Name</td>
-                <td>Email</td>
-                <td>Contact</td>
-                <td>Status</td>
-                <td>Action</td>
-            </tr>
-            <tr>
-                {% for i in sc %}
 
-                <td>{{forloop.counter }}</td>
-                <td>{{i.request_details}}</td>
-                <td>{{i.request_todate}}</td>
-                <td>{{i.user.user_name}}</td>
-                <td>{{i.user.user_email}}</td>
-                <td>{{i.user.user_contact}}</td>
-                <td>{% if i.request_emergency == 1 %}
-                    Emergency
-                    {% else %}
-                    Not Emergency
-                    {% endif %}</td>
-                <td>
-                    {% if i.request_status == 0 %}
-                    <a href="{% url 'Admin:accept' i.id %}">Accept/</a>
-                    <a href="{% url 'Admin:reject' i.id %}">Reject</a>
-                    {% elif i.request_status == 1 %}
-                    Accepted |
-                    <a href="{% url 'Admin:viewsc' i.id  %}"> View Servicecentre</a>
-                    {% elif i.request_status == 3 %}
-                    Assigned
-                    {% elif i.request_status == 4 %}
-                    Joined
-                    {% elif i.request_status == 5 %}
-                    Replacement
-                    {% elif i.request_status == 6 %}
-                    Repair
-                    {% elif i.request_status == 7 %}
-                    Replacement Form Uploaded
-                    {% elif i.request_status == 9 %}
-                    File Uploaded
-                    {% elif i.request_status == 10 %}
-                    Visit Date Added
-                    {% elif i.request_status == 2 %}
-                    Rejected
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </form>
-</body>
+<h2 align="center">Requests</h2>
+
+<table align="center" border="1" cellpadding="8">
+
+    <tr>
+        <th>SINO</th>
+        <th>Details</th>
+        <th>Todate</th>
+        <th>User Name</th>
+        <th>Email</th>
+        <th>Contact</th>
+        <th>Emergency</th>
+        <th>Action</th>
+    </tr>
+
+    {% for i in sc %}
+    <tr>
+
+        <td>{{ forloop.counter }}</td>
+
+        <td>{{ i.request_details }}</td>
+
+        <td>{{ i.request_todate|default:"-" }}</td>
+
+        <!-- Safe user check -->
+        <td>
+            {% if i.user %}
+                {{ i.user.user_name }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+
+        <td>{{ i.user.user_email|default:"-" }}</td>
+        <td>{{ i.user.user_contact|default:"-" }}</td>
+
+        <!-- Emergency -->
+        <td>
+            {% if i.request_emergency == 1 %}
+                <span style="color:red;">Emergency</span>
+            {% else %}
+                Normal
+            {% endif %}
+        </td>
+
+        <!-- Status / Action -->
+        <td>
+            {% if i.request_status == 0 %}
+                <a href="{% url 'Admin:accept' i.id %}">Accept</a> |
+                <a href="{% url 'Admin:reject' i.id %}">Reject</a>
+
+            {% elif i.request_status == 1 %}
+                Accepted |
+                <a href="{% url 'Admin:viewsc' i.id %}">View Service Centre</a>
+
+            {% elif i.request_status == 3 %}
+                Assigned
+
+            {% elif i.request_status == 4 %}
+                Joined
+
+            {% elif i.request_status == 5 %}
+                Replacement
+
+            {% elif i.request_status == 6 %}
+                Repair
+
+            {% elif i.request_status == 7 %}
+                Replacement Form Uploaded
+
+            {% elif i.request_status == 9 %}
+                File Uploaded
+
+            {% elif i.request_status == 10 %}
+                Visit Date Added
+
+            {% elif i.request_status == 2 %}
+                <span style="color:red;">Rejected</span>
+
+            {% else %}
+                Pending
+            {% endif %}
+        </td>
+
+    </tr>
+
+    {% empty %}
+    <tr>
+        <td colspan="8" align="center">No Requests Found</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+
 {% if msg %}
 <script>
-    alert("{{msg}}")
+    alert("{{msg}}");
     window.location = "{% url 'Admin:viewrequest' %}";
 </script>
 {% endif %}
 
-</html>
-
+</body>
 </html>
