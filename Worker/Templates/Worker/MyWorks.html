@@ -142,6 +142,8 @@
        {% elif i.request_status == 12 %}
         <a href="{% url 'Worker:start_work' i.id %}">Start Work</a>
         {% elif i.request_status == 13 %}
+          <a href="{% url 'Worker:end_work' i.id %}">End Work</a>
+        {% elif i.request_status == 14 %}
             <span class="done">Completed</span>
         {% elif i.request_status == 11 %}
         <span class="cancelled">Cancelled</span>

@@ -98,7 +98,7 @@ def myworks(request):
     repair = tbl_request.objects.filter(
         worker_id=worker_id,
         request_status__gte=9,
-        request_status__lte=13
+        request_status__lte=14
     )
 
     for qs in [data, replacement, repair]:
@@ -186,7 +186,9 @@ def form(request, id):
 def risk_assessment(request, id):
     work = tbl_request.objects.get(id=id)
     if request.method == "POST":
-        risk_items = request.POST.getlist("risk")  # checkbox values
+        risk_items = request.POST.getlist("check")  # checkbox values
+        # print(len(risk_items))
+
 
         if len(risk_items) < 12:  # all must be checked
             work.request_status = 11  # cancelled
@@ -202,15 +204,16 @@ def risk_assessment(request, id):
 
 def start_work(request, id):
     work = tbl_request.objects.get(id=id)
-    work.request_status = 12
-    work.request_starttime = timezone.now()
+    work.request_status = 13
+    work.request_workstarttime = timezone.now()
     work.save()
     return redirect("Worker:myworks")
 
 
 def end_work(request, id):
     work = tbl_request.objects.get(id=id)
-    work.request_status = 13
+    work.request_status = 14
+    work.request_workendtime = timezone.now()
     work.request_endtime = timezone.now()
     work.save()
     return redirect("Worker:myworks")
