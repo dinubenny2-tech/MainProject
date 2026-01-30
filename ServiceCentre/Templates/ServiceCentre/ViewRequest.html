@@ -3,41 +3,130 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Request</title>
+    <title>Service Requests</title>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 97%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        .new { color: blue; font-weight: bold; }
+        .running { color: orange; font-weight: bold; }
+        .done { color: green; font-weight: bold; }
+        .cancelled { color: red; font-weight: bold; }
+    </style>
 </head>
 
 <body>
-    <form action="" method="post">
-        {% csrf_token %}
-        <table align="center" border>
-            <tr>
-                <td>SINO</td>
-                <td>Details</td>
-                <td>Todate</td>
-                <td>User Name</td>
-                <td>Email</td>
-                <td>Contact</td>
-                <td>Status</td>
-                <td>Action</td>
-            </tr>
-             <tr>
-                 {% for i in sc %}
 
-                <td>{{forloop.counter }}</td>
-                <td>{{i.request_details}}</td>
-                <td>{{i.request_todate}}</td>
-                <td>{{i.user.user_name}}</td>
-                <td>{{i.user.user_email}}</td>
-                <td>{{i.user.user_contact}}</td>
-                <td>{{i.request_emergency}}</td>
-                <td>
-                    
-                </td>
-            </tr>
-                {% endfor %}
-        </table>
-    </form>
+<h2 align="center">Service Centre - All Requests</h2>
+
+<table align="center" border="1">
+
+<tr>
+    <th>SINO</th>
+    <th>Details</th>
+    <th>To Date</th>
+    <th>User</th>
+    <th>Email</th>
+    <th>Contact</th>
+    <th>Emergency</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+{% for i in sc %}
+<tr>
+
+    <td>{{ forloop.counter }}</td>
+    <td>{{ i.request_details }}</td>
+    <td>{{ i.request_todate|default:"-" }}</td>
+    <td>{{ i.user.user_name }}</td>
+    <td>{{ i.user.user_email }}</td>
+    <td>{{ i.user.user_contact }}</td>
+
+    <td>
+        {% if i.request_emergency == 1 %}
+            <span style="color:red;">Emergency</span>
+        {% else %}
+            Normal
+        {% endif %}
+    </td>
+
+    <td>
+
+        {% if i.request_status == 0 %}
+            <span class="new">New Request</span>
+
+        {% elif i.request_status == 4 %}
+            <span class="running">Assigned to Worker</span>
+
+        {% elif i.request_status == 6 %}
+            <span class="running">Replacement Started</span>
+
+        {% elif i.request_status == 7 %}
+            <span class="done">Replacement Completed</span>
+
+        {% elif i.request_status == 9 %}
+            <span class="running">Waiting Visit Date</span>
+
+        {% elif i.request_status == 10 %}
+            <span class="running">Risk Assessment Pending</span>
+
+        {% elif i.request_status == 12 %}
+            <span class="running">Ready to Start Work</span>
+
+        {% elif i.request_status == 13 %}
+            <span class="running">Work in Progress</span>
+
+        {% elif i.request_status == 14 %}
+            <span class="done">Completed</span>
+
+        {% elif i.request_status == 16 %}
+            <span class="cancelled">Worker Cancelled</span>
+
+        {% else %}
+            Unknown
+        {% endif %}
+
+    </td>
+
+
+    <td>
+
+        {% if i.request_status == 0 %}
+            <a href="{% url 'ServiceCentre:assign_worker' i.id %}">
+                Assign Worker
+            </a>
+
+        {% elif i.request_status == 16 %}
+            <a href="{% url 'ServiceCentre:reassign_worker' i.id %}">
+                Reassign Worker
+            </a>
+
+        {% elif i.request_status == 14 %}
+            Completed
+
+        {% else %}
+            Monitoring
+        {% endif %}
+
+    </td>
+
+</tr>
+{% empty %}
+<tr>
+    <td colspan="9">No Requests Found</td>
+</tr>
+{% endfor %}
+
+</table>
+
 </body>
-
 </html>

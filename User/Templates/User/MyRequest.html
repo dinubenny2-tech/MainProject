@@ -53,26 +53,35 @@
 
                 <td>
 
-                    {% if i.request_status == 1 %}
-                    Request Accepted By Admin.
+                    {% if i.request_status == 0 %}
+                    Request Submitted
+
+                    {% elif i.request_status == 1 %}
+                    Request Accepted By Admin
 
                     {% elif i.request_status == 2 %}
-                    Request Rejected By Admin.
+                    <span style="color:red;">Request Rejected By Admin</span>
 
                     {% elif i.request_status == 3 %}
-                    Request Assigned.
+                    Assigned to Service Centre
 
                     {% elif i.request_status == 4 %}
-                    Worker Took Your Request.
+                    Worker Assigned |
+                    <a href="{% url 'User:chatpage' i.worker.id %}">Chat</a>
 
                     {% elif i.request_status == 5 %}
-                    <a href="{% url 'User:upload' i.id %}">For Replacement</a>
+                    Upload File For Replacement |
+                    <a href="{% url 'User:upload' i.id %}">Upload</a> |
+                    <a href="{% url 'User:chatpage' i.worker.id %}">Chat</a>
 
                     {% elif i.request_status == 6 %}
-                    File Uploaded
+                    File Uploaded |
+                    <a href="{% url 'User:chatpage' i.worker.id %}">Chat</a>
 
                     {% elif i.request_status == 7 %}
-
+                    Replacement Completed |
+                    <a href="{% url 'User:chatpage' i.worker.id %}">Chat</a>
+                    <br>
                     {% for r in i.tbl_replacement_set.all %}
                     {% if r.replacement_pdf %}
                     <a href="{{ r.replacement_pdf.url }}" target="_blank">
@@ -84,10 +93,31 @@
                     {% endfor %}
 
                     {% elif i.request_status == 9 %}
-                    For Repair
+                    Repair Selected |
+                    <a href="{% url 'User:chatpage' i.worker.id %}">Chat</a>
 
                     {% elif i.request_status == 10 %}
-                    Worker Will Visit
+                    Worker Will Visit Soon |
+                    <a href="{% url 'User:chatpage' i.worker.id %}">Chat</a>
+
+                    {% elif i.request_status == 11 %}
+                    <span class="cancelled">Cancelled Due Safety Issues..</span>
+                    {% elif i.request_status == 12 %}
+                    Work Ready To Start |
+                    <a href="{% url 'User:chatpage' i.worker.id %}">Chat</a>
+
+                    {% elif i.request_status == 13 %}
+                    Work In Progress |
+                    <a href="{% url 'User:chatpage' i.worker.id %}">Chat</a>
+
+                    {% elif i.request_status == 14 %}
+                    <span class="done">Completed</span> |
+                    <a href="{% url 'User:rating' i.worker.id %}">Rate Worker</a>
+
+                    {% elif i.request_status == 16 %}
+                    <span style="color:red; font-weight:bold;">
+                        Worker Cancelled – Reassigning New Worker
+                    </span>
 
                     {% else %}
                     Pending
@@ -95,6 +125,7 @@
                     {% endif %}
 
                 </td>
+
 
             </tr>
             {% empty %}

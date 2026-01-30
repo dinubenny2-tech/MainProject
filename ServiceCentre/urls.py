@@ -8,5 +8,6 @@ urlpatterns = [
     path('changepassword/',views.changepassword,name='changepassword'),
     path('wregistration/',views.wregistration,name="wregistration"),
     path('viewrequest/',views.viewrequest,name="viewrequest"),
-    path('viewworker/',views.viewworker,name="viewworker"),
+    path('reassign/<int:id>/', views.reassign_worker, name='reassign_worker'),
+
 ]

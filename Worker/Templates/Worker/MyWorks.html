@@ -1,166 +1,199 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>My Works</title>
     <style>
-        table { border-collapse: collapse; width: 95%; }
-        th, td { padding: 8px; text-align: center; }
-        .done { color: green; font-weight: bold; }
-        .late { color: red; font-weight: bold; }
-        .running { color: orange; font-weight: bold; }
-        .cancelled { color: red; font-weight: bold; }
+        table {
+            border-collapse: collapse;
+            width: 95%;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        .done {
+            color: green;
+            font-weight: bold;
+        }
+
+        .late {
+            color: red;
+            font-weight: bold;
+        }
+
+        .running {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .cancelled {
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 
 <body>
-<h2 align="center">My Works</h2>
+    <h2 align="center">My Works</h2>
 
-<!-- ================= CURRENT WORKS ================= -->
-<table align="center" border="1">
-<tr>
-    <th>SINO</th>
-    <th>Details</th>
-    <th>To Date</th>
-    <th>User</th>
-    <th>Contact</th>
-    <th>Emergency</th>
-    <th>Remaining Time</th>
-    <th>Action</th>
-</tr>
+    <!-- ================= CURRENT WORKS ================= -->
+    <table align="center" border="1">
+        <tr>
+            <th>SINO</th>
+            <th>Details</th>
+            <th>To Date</th>
+            <th>User</th>
+            <th>Contact</th>
+            <th>Emergency</th>
+            <th>Remaining Time</th>
+            <th>Action</th>
+        </tr>
 
-{% for i in data %}
-<tr>
-    <td>{{ forloop.counter }}</td>
-    <td>{{ i.request_details }}</td>
-    <td>{{ i.request_todate|default:"-" }}</td>
-    <td>{{ i.user.user_name }}</td>
-    <td>{{ i.user.user_contact }}</td>
+        {% for i in data %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.request_details }}</td>
+            <td>{{ i.request_todate|default:"-" }}</td>
+            <td>{{ i.user.user_name }}</td>
+            <td>{{ i.user.user_contact }}</td>
 
-    <td>
-        {% if i.request_emergency == 1 %}
-            <span style="color:red;">Emergency</span>
-        {% else %}
-            Normal
-        {% endif %}
-    </td>
+            <td>
+                {% if i.request_emergency == 1 %}
+                <span style="color:red;">Emergency</span>
+                {% else %}
+                Normal
+                {% endif %}
+            </td>
 
-    <td>
-        {% if i.remaining_text == "✓ Completed" %}
-            <span class="done">{{ i.remaining_text }}</span>
-        {% elif i.remaining_text == "Overdue" %}
-            <span class="late">{{ i.remaining_text }}</span>
-        {% elif i.remaining_text == "Not Started" %}
-            Not Started
-        {% else %}
-            <span class="running">{{ i.remaining_text }}</span>
-        {% endif %}
-    </td>
+            <td>
+                {% if i.remaining_text == "✓ Completed" %}
+                <span class="done">{{ i.remaining_text }}</span>
+                {% elif i.remaining_text == "Overdue" %}
+                <span class="late">{{ i.remaining_text }}</span>
+                {% elif i.remaining_text == "Not Started" %}
+                Not Started
+                {% else %}
+                <span class="running">{{ i.remaining_text }}</span>
+                {% endif %}
+            </td>
 
-    <td>
-        {% if i.request_status == 4 %}
-            <a href="{% url 'Worker:replacement' i.id %}">Replacement</a> |
-            <a href="{% url 'Worker:repair' i.id %}">Repair</a>
-        {% elif i.request_status == 11 %}
-            <span class="cancelled">Cancelled</span>
-        {% endif %}
-    </td>
-</tr>
-{% empty %}
-<tr>
-    <td colspan="8">No Works Available</td>
-</tr>
-{% endfor %}
-</table>
+            <td>
+                {% if i.request_status == 4 %}
+                <a href="{% url 'Worker:replacement' i.id %}">Replacement</a> |
+                <a href="{% url 'Worker:repair' i.id %}">Repair</a>
+                {% elif i.request_status == 11 %}
+                <span class="cancelled">Cancelled</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8">No Works Available</td>
+        </tr>
+        {% endfor %}
+    </table>
 
-<br><br>
+    <br><br>
 
-<!-- ================= REPLACEMENT ================= -->
-<h2 align="center">For Replacement</h2>
-<table align="center" border="1">
-<tr>
-    <th>SINO</th>
-    <th>Details</th>
-    <th>Start Time</th>
-    <th>User</th>
-    <th>Contact</th>
-    <th>Remaining Time</th>
-    <th>Action</th>
-</tr>
+    <!-- ================= REPLACEMENT ================= -->
+    <h2 align="center">For Replacement</h2>
+    <table align="center" border="1">
+        <tr>
+            <th>SINO</th>
+            <th>Details</th>
+            <th>Start Time</th>
+            <th>User</th>
+            <th>Contact</th>
+            <th>Remaining Time</th>
+            <th>Action</th>
+        </tr>
 
-{% for i in replacement %}
-<tr>
-    <td>{{ forloop.counter }}</td>
-    <td>{{ i.request_details }}</td>
-    <td>{{ i.request_starttime|default:"-" }}</td>
-    <td>{{ i.user.user_name }}</td>
-    <td>{{ i.user.user_contact }}</td>
-    <td>{{ i.remaining_text }}</td>
-    <td>
-        {% if i.request_status == 6 %}
-            <a href="{% url 'Worker:viewfile' i.id %}">View File</a>
-        {% elif i.request_status == 7 %}
-            Completed
-        {% elif i.request_status == 11 %}
-            <span class="cancelled">Cancelled</span>
-        {% else %}
-            Pending
-        {% endif %}
-    </td>
-</tr>
-{% endfor %}
-</table>
+        {% for i in replacement %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.request_details }}</td>
+            <td>{{ i.request_starttime|default:"-" }}</td>
+            <td>{{ i.user.user_name }}</td>
+            <td>{{ i.user.user_contact }}</td>
+            <td>{{ i.remaining_text }}</td>
+            <td>
+                {% if i.request_status == 6 %}
+                <a href="{% url 'Worker:viewfile' i.id %}">View File</a>
+                {% elif i.request_status == 7 %}
+                Completed
+                {% elif i.request_status == 11 %}
+                <span class="cancelled">Cancelled</span>
+                {% else %}
+                Pending
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 
-<br><br>
+    <br><br>
 
-<!-- ================= REPAIR ================= -->
-<h2 align="center">For Repair</h2>
-<table align="center" border="1">
-<tr>
-    <th>SINO</th>
-    <th>Details</th>
-    <th>Start Time</th>
-    <th>User</th>
-    <th>Contact</th>
-    <th>Remaining Time</th>
-    <th>Action</th>
-</tr>
+    <!-- ================= REPAIR ================= -->
+    <h2 align="center">For Repair</h2>
+    <table align="center" border="1">
+        <tr>
+            <th>SINO</th>
+            <th>Details</th>
+            <th>Start Time</th>
+            <th>User</th>
+            <th>Contact</th>
+            <th>Remaining Time</th>
+            <th>Action</th>
+        </tr>
 
-{% for i in repair %}
-<tr>
-    <td>{{ forloop.counter }}</td>
-    <td>{{ i.request_details }}</td>
-    <td>{{ i.request_starttime|default:"-" }}</td>
-    <td>{{ i.user.user_name }}</td>
-    <td>{{ i.user.user_contact }}</td>
-    <td>{{ i.remaining_text }}</td>
-    <td>
-        {% if i.request_status == 9 %}
-            <a href="{% url 'Worker:todate' i.id %}">Add Visit Date</a>
-        {% elif i.request_status == 10 %}
-            <a href="{% url 'Worker:risk_assessment' i.id %}">Risk Assessment</a>
-       {% elif i.request_status == 12 %}
-        <a href="{% url 'Worker:start_work' i.id %}">Start Work</a>
-        {% elif i.request_status == 13 %}
-          <a href="{% url 'Worker:end_work' i.id %}">End Work</a>
-        {% elif i.request_status == 14 %}
-            <span class="done">Completed</span>
-        {% elif i.request_status == 11 %}
-        <span class="cancelled">Cancelled</span>
-        {% elif i.request_status == 11 %}
-            <span class="cancelled">Cancelled</span>
-        {% endif %}
-    </td>
-</tr>
-{% endfor %}
-</table>
+        {% for i in repair %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.request_details }}</td>
+            <td>{{ i.request_starttime|default:"-" }}</td>
+            <td>{{ i.user.user_name }}</td>
+            <td>{{ i.user.user_contact }}</td>
+            <td>{{ i.remaining_text }}</td>
+            <td>
+                {% if i.request_status == 9 %}
+                <a href="{% url 'Worker:todate' i.id %}">Add Visit Date</a> | 
+                <a href="{% url 'Worker:cancelwork' i.id %}">Cancel Work</a>|
+                <a href="{% url 'Worker:chatpage' i.user.id %}">Chat</a>
+
+
+                {% elif i.request_status == 10 %}
+                <a href="{% url 'Worker:risk_assessment' i.id %}">Risk Assessment</a> |
+                <a href="{% url 'Worker:cancel_work' i.id %}">Cancel Work</a>
+                <a href="{% url 'Worker:chatpage' i.user.id %}">Chat</a>
+
+                {% elif i.request_status == 12 %}
+                <a href="{% url 'Worker:start_work' i.id %}">Start Work</a>
+                {% elif i.request_status == 13 %}
+                <a href="{% url 'Worker:end_work' i.id %}">End Work</a>
+                {% elif i.request_status == 14 %}
+                <span class="done">Completed</span>
+                {% elif i.request_status == 11 %}
+                <span class="cancelled">Cancelled Due Safety Issues..</span>
+                {% elif i.request_status == 11 %}
+                <span class="cancelled">Cancelled</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 
 </body>
+
 </html>
 
 {% if msg %}
 <script>
     alert("{{ msg }}");
-    window.location="{% url 'Worker:myworks' %}";
+    window.location = "{% url 'Worker:myworks' %}";
 </script>
 {% endif %}

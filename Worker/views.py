@@ -9,6 +9,8 @@ from django.core.files.base import ContentFile
 from xhtml2pdf import pisa
 from io import BytesIO
 import base64
+from datetime import datetime
+from django.db.models import Q
 
 LIMIT = timedelta(days=6)
 
@@ -218,6 +220,13 @@ def end_work(request, id):
     work.save()
     return redirect("Worker:myworks")
 
+def cancel_work(request,id):
+    work = tbl_request.objects.get(id=id)
+    work.request_status = 16
+    work.save()
+    return redirect("Worker:myworks")
+
+
 
 def complete_work(request, id):
     data = tbl_request.objects.get(id=id)
@@ -234,3 +243,19 @@ def complete_work(request, id):
         })
 
     return render(request, "Worker/CompleteWork.html", {"data": data})
+def chatpage(request,id):
+    user  = tbl_user.objects.get(id=id)
+    return render(request,"worker/Chat.html",{"user":user})
+def ajaxchat(request):
+    from_worker = tbl_worker.objects.get(id=request.session["wid"])
+    to_user = tbl_user.objects.get(id=request.POST.get("tid"))
+    tbl_chat.objects.create(chat_content=request.POST.get("msg"),chat_time=datetime.now(),worker_from=from_worker,user_to=to_user,chat_file=request.FILES.get("file"))
+    return render(request,"worker/Chat.html")
+def ajaxchatview(request):
+    tid = request.GET.get("tid")
+    worker = tbl_worker.objects.get(id=request.session["wid"])
+    chat_data = tbl_chat.objects.filter((Q(worker_from=worker) | Q(worker_to=worker)) & (Q(user_from=tid) | Q(user_to=tid))).order_by('chat_time')
+    return render(request,"worker/ChatView.html",{"data":chat_data,"tid":int(tid)})
+def clearchat(request):
+    tbl_chat.objects.filter(Q(worker_from=request.session["wid"]) & Q(user_to=request.GET.get("tid")) | (Q(user_from=request.GET.get("tid")) & Q(worker_to=request.session["wid"]))).delete()
+    return render(request,"worker/ClearChat.html",{"msg":"Chat Deleted Sucessfully...."})

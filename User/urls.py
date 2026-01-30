@@ -12,5 +12,13 @@ urlpatterns = [
   path('myrequest/',views.myrequest,name="myrequest"),
   path('upload/<int:id>',views.upload,name="upload"),
   path('viewform/<int:id>',views.viewform,name='viewform'),
+  
+  path('chatpage/<int:id>',views.chatpage,name="chatpage"),
+  path('ajaxchat/',views.ajaxchat,name="ajaxchat"),
+  path('ajaxchatview/',views.ajaxchatview,name="ajaxchatview"),
+  path('clearchat/',views.clearchat,name="clearchat"),
+  path('rating/<int:mid>',views.rating,name="rating"),  
+  path('ajaxstar/',views.ajaxstar,name="ajaxstar"),
+  path('starrating/',views.starrating,name="starrating"),
 
 ]

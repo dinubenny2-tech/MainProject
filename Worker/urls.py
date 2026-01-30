@@ -19,7 +19,12 @@ urlpatterns = [
     path('complete_work/<int:id>/', views.complete_work, name='complete_work'),
     path('start_work/<int:id>/', views.start_work, name='start_work'),
     path('end_work/<int:id>/', views.end_work, name='end_work'),
-
+    path('cancel_work/<int:id>/', views.cancel_work, name='cancel_work'),
+    path('chatpage/<int:id>',views.chatpage,name="chatpage"),
+    path('ajaxchat/',views.ajaxchat,name="ajaxchat"),
+    path('ajaxchatview/',views.ajaxchatview,name="ajaxchatview"),
+    path('clearchat/',views.clearchat,name="clearchat"),
+    
     
 
 ]

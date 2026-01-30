@@ -76,11 +76,23 @@ def viewrequest(request):
     if "scid" not in request.session:
         return redirect("Guest/Login.html")
     else:
-        data=tbl_request.objects.all()
+        data=tbl_request.objects.filter(servicecentre=request.session['scid'])
         return render(request,'ServiceCentre/ViewRequest.html',{"sc":data})
-def viewworker(request):
+    
+
+def reassign_worker(request, id):
     if "scid" not in request.session:
-        return redirect("Guest/Login.html")
+        return redirect("Guest:login")
+    workers = tbl_worker.objects.filter(servicecentre_id=request.session['scid'])
+    if request.method == "POST":
+        wid = request.POST.get("wid")
+
+        tbl_request.objects.filter(id=id).update(
+            worker_id=wid,   
+            request_status=4
+        )
+        return redirect("ServiceCentre:viewrequest")
     else:
-        data=tbl_worker.objects.all()
-        return render(request,'ServiceCentre/ViewWorker.html',{"worker":data})
+        return render(request, 'ServiceCentre/ViewWorker.html', {"worker": workers})
+    
+

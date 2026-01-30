@@ -2,7 +2,9 @@ from django.shortcuts import render,redirect
 from Guest.models import*
 from User.models import *
 from Worker.models import*
-
+from datetime import datetime
+from django.db.models import Q
+from django.http import JsonResponse
 def myprofile(request):
     if "uid" not in request.session:
         return redirect("Guest/Login.html")
@@ -110,6 +112,79 @@ def viewform(request,id):
     data=tbl_request.objects.get(id=id)
     rdata=tbl_replacement.objects.get(request=data)
     return render(request,'User/ViewForm.html',{'data':data,'rdata':rdata})
+def chatpage(request,id):
+    worker = tbl_worker.objects.get(id=id)
+    return render(request,"User/Chat.html",{"worker":worker})
+def ajaxchat(request):
+    from_user = tbl_user.objects.get(id=request.session["uid"])
+    to_worker = tbl_worker.objects.get(id=request.POST.get("tid"))
+    print(to_worker)
+    tbl_chat.objects.create(chat_content=request.POST.get("msg"),chat_time=datetime.now(),user_from=from_user,worker_to=to_worker,chat_file=request.FILES.get("file"))
+    return render(request,"User/Chat.html")
+def ajaxchatview(request):
+    tid = request.GET.get("tid")
+    user = tbl_user.objects.get(id=request.session["uid"])
+    chat_data = tbl_chat.objects.filter((Q(user_from=user) | Q(user_to=user)) & (Q(worker_from=tid) | Q(worker_to=tid))).order_by('chat_time')
+    return render(request,"User/ChatView.html",{"data":chat_data,"tid":int(tid)})
+def clearchat(request):
+    tbl_chat.objects.filter(Q(user_from=request.session["uid"]) & Q(worker_to=request.GET.get("tid")) | (Q(worker_from=request.GET.get("tid")) & Q(user_to=request.session["uid"]))).delete()
+    return render(request,"User/ClearChat.html",{"msg":"Chat Deleted Sucessfully...."})
+def rating(request,mid):
+    parray=[1,2,3,4,5]
+    mid=mid
+    # wdata=tbl_booking.objects.get(id=mid)
+    
+    counts=0
+    counts=stardata=tbl_rating.objects.filter(servicecentre=mid).count()
+    if counts>0:
+        res=0
+        stardata=tbl_rating.objects.filter(servicecentre=mid).order_by('-datetime')
+        for i in stardata:
+            res=res+i.rating_data
+        avg=res//counts
+        # print(avg)
+        return render(request,"User/Rating.html",{'mid':mid,'data':stardata,'ar':parray,'avg':avg,'count':counts})
+    else:
+         return render(request,"User/Rating.html",{'mid':mid})
+
+def ajaxstar(request):
+    parray=[1,2,3,4,5]
+    rating_data=request.GET.get('rating_data')
+    
+    user_review=request.GET.get('user_review')
+    pid=request.GET.get('pid')
+    # wdata=tbl_booking.objects.get(id=pid)
+    tbl_rating.objects.create(user=tbl_user.objects.get(id=request.session['uid']),user_review=user_review,rating_data=rating_data,servicecentre=tbl_servicecentre.objects.get(id=pid))
+    stardata=tbl_rating.objects.filter(servicecentre=pid).order_by('-datetime')
+    return render(request,"User/AjaxRating.html",{'data':stardata,'ar':parray})
+
+def starrating(request):
+    r_len = 0
+    five = four = three = two = one = 0
+    # cdata = tbl_booking.objects.get(id=request.GET.get("pdt"))
+    rate = tbl_rating.objects.filter(servicecentre=request.GET.get("pdt"))
+    ratecount = tbl_rating.objects.filter(servicecentre=request.GET.get("pdt")).count()
+    for i in rate:
+        if int(i.rating_data) == 5:
+            five = five + 1
+        elif int(i.rating_data) == 4:
+            four = four + 1
+        elif int(i.rating_data) == 3:
+            three = three + 1
+        elif int(i.rating_data) == 2:
+            two = two + 1
+        elif int(i.rating_data) == 1:
+            one = one + 1
+        else:
+            five = four = three = two = one = 0
+        # print(i.rating_data)
+        # r_len = r_len + int(i.rating_data)
+    # rlen = r_len // 5
+    # print(rlen)
+    result = {"five":five,"four":four,"three":three,"two":two,"one":one,"total_review":ratecount}
+    return JsonResponse(result)
+
+
 
 
 
